@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#F4EEE4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>LUMA English</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4EEE4;--surface:#FDFAF5;--alt:#EDE7D9;
+  --purple:#9B72CF;--pl:#D4BBEF;--pp:#F0E8FA;
+  --green:#6DB88E;--gl:#B2E0C4;--gp:#E8F7EF;
+  --amber:#D4A054;--ap:#FDF1DE;
+  --red:#E07070;--rp:#FFEAEA;
+  --text:#2C1F14;--mid:#6B5744;--light:#9B8B7A;--border:#DDD4C4;
+  --sh:rgba(44,31,20,.09);--nav:68px;--head:60px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
+#app{height:100vh;height:100dvh;display:flex;flex-direction:column;max-width:430px;margin:0 auto;overflow:hidden}
+.app-header{height:var(--head);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 18px;flex-shrink:0;box-shadow:0 2px 10px var(--sh)}
+.logo{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--purple)}
+.logo span{color:var(--green)}
+.streak-badge{display:flex;align-items:center;gap:5px;background:var(--pp);border-radius:20px;padding:5px 12px;font-size:13px;font-weight:800;color:var(--purple)}
+.content{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:calc(var(--nav)+10px);-webkit-overflow-scrolling:touch}
+.tab{display:none;padding:18px 15px;animation:fadeUp .3s ease}
+.tab.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.nav{height:var(--nav);background:var(--surface);border-top:1px solid var(--border);display:flex;padding:0 4px;flex-shrink:0;box-shadow:0 -3px 14px var(--sh)}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;color:var(--light);padding:8px 2px;border-radius:10px;transition:color .2s}
+.nav-btn.active{color:var(--purple)}
+.nav-icon{font-size:21px;line-height:1;transition:transform .2s}
+.nav-btn.active .nav-icon{transform:translateY(-2px)}
+.nav-dot{width:4px;height:4px;border-radius:50%;background:var(--purple);opacity:0;transition:opacity .2s;margin-top:-2px}
+.nav-btn.active .nav-dot{opacity:1}
+.nav-lbl{font-size:9.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
+.card{background:var(--surface);border-radius:18px;padding:16px;border:1px solid var(--border);box-shadow:0 2px 8px var(--sh);margin-bottom:13px}
+.card-p{background:var(--pp);border-color:var(--pl)}
+.card-g{background:var(--gp);border-color:var(--gl)}
+.card-a{background:var(--ap);border-color:#E8C87A}
+.page-title{font-family:'Fraunces',serif;font-size:24px;font-weight:700;line-height:1.2;margin-bottom:3px}
+.section-title{font-family:'Fraunces',serif;font-size:16px;font-weight:700;margin-bottom:12px}
+.body-text{font-size:14px;line-height:1.6;color:var(--mid)}
+.label{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--light)}
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px}
+.bp{background:var(--pp);color:var(--purple)}.bg{background:var(--gp);color:#3A9A68}.ba{background:var(--ap);color:#B07830}.bk{background:var(--alt);color:var(--light)}
+.prog{height:8px;background:var(--alt);border-radius:10px;overflow:hidden;margin:7px 0}
+.prog-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--purple),var(--green));transition:width 1s cubic-bezier(.4,0,.2,1)}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:14px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:13px 8px;text-align:center}
+.stat-val{font-family:'Fraunces',serif;font-size:21px;font-weight:700;color:var(--purple)}
+.stat-lbl{font-size:9.5px;font-weight:800;color:var(--light);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.daily{background:linear-gradient(135deg,var(--purple),#7352B8);border-radius:20px;padding:20px;color:white;position:relative;overflow:hidden;margin-bottom:14px;cursor:pointer}
+.daily::before{content:'';position:absolute;top:-15px;right:-15px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.08)}
+.daily-tag{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;opacity:.7;margin-bottom:7px}
+.daily-title{font-family:'Fraunces',serif;font-size:19px;font-weight:700;margin-bottom:7px;line-height:1.3}
+.daily-meta{font-size:12px;opacity:.75;margin-bottom:14px}
+.btn-white{display:inline-flex;align-items:center;background:white;color:var(--purple);border:none;border-radius:25px;padding:8px 16px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 18px;border-radius:25px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;border:none;transition:all .2s}
+.btn-p{background:var(--purple);color:white;box-shadow:0 4px 12px rgba(155,114,207,.35)}
+.btn-g{background:var(--green);color:white}
+.btn-full{width:100%}
+.btn-out{background:transparent;color:var(--purple);border:2px solid var(--pl)}
+.btn-sm{padding:7px 14px;font-size:13px}
+.btn:disabled{opacity:.5;pointer-events:none}
+.quote{background:var(--alt);border-radius:13px;padding:14px;text-align:center;margin-bottom:13px}
+.quote-text{font-family:'Fraunces',serif;font-style:italic;font-size:14px;color:var(--mid);line-height:1.5}
+.quote-author{font-size:11px;color:var(--light);margin-top:5px;font-weight:700}
+.tip-card{background:var(--surface);border:1px solid var(--border);border-radius:15px;padding:15px;margin-bottom:11px;display:flex;gap:12px;align-items:flex-start}
+.tip-ico{font-size:24px;flex-shrink:0;margin-top:2px}
+.tip-title{font-size:14px;font-weight:800;color:var(--text);margin-bottom:4px}
+.tip-body{font-size:13px;color:var(--mid);line-height:1.5}
+.block{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:13px;box-shadow:0 2px 8px var(--sh)}
+.block-hdr{display:flex;align-items:center;justify-content:space-between;padding:15px;cursor:pointer;user-select:none}
+.b1 .block-hdr{background:var(--pp)}.b2 .block-hdr{background:var(--gp)}.b3 .block-hdr{background:var(--ap)}
+.block-title{font-family:'Fraunces',serif;font-size:15px;font-weight:700;color:var(--text)}
+.block-sub{font-size:11px;color:var(--mid);margin-top:2px}
+.block-right{display:flex;align-items:center;gap:8px}
+.chevron{font-size:16px;color:var(--light);transition:transform .3s}
+.block.open .chevron{transform:rotate(180deg)}
+.lessons-list{display:none;padding:8px}
+.block.open .lessons-list{display:block}
+.lesson-item{display:flex;align-items:center;gap:11px;padding:11px;border-radius:11px;cursor:pointer;transition:background .2s;margin-bottom:3px}
+.lesson-item:hover{background:var(--bg)}
+.lesson-ico{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.ico-v{background:var(--pp)}.ico-l{background:var(--gp)}.ico-g{background:var(--ap)}.ico-e{background:#E8EEFF}.ico-m{background:#FFF0F5}
+.lesson-body{flex:1;min-width:0}
+.lesson-title{font-size:13.5px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lesson-meta{font-size:11px;color:var(--light);margin-top:2px;display:flex;align-items:center;gap:5px}
+.l-status{width:21px;height:21px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.l-status.done{background:var(--green);border-color:var(--green);color:white}
+.exam-row{background:var(--ap);border:1px solid #E8C87A;border-radius:11px;padding:13px;margin:6px 0;display:flex;align-items:center;gap:11px;cursor:pointer}
+.exam-row.done{background:var(--gp);border-color:var(--gl)}
+.exam-title{font-family:'Fraunces',serif;font-size:14px;font-weight:700;color:var(--text)}
+.exam-sub{font-size:11px;color:var(--mid)}
+.overlay{position:fixed;inset:0;background:rgba(44,31,20,.45);z-index:100;display:none;align-items:flex-end;backdrop-filter:blur(3px)}
+.overlay.on{display:flex}
+.modal{background:var(--bg);border-radius:24px 24px 0 0;width:100%;max-height:93vh;overflow-y:auto;padding:0 0 28px;animation:slideUp .35s cubic-bezier(.34,1.56,.64,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:38px;height:4px;border-radius:2px;background:var(--border);margin:12px auto 0}
+.modal-inner{padding:18px 18px 0}
+.act-hdr{background:var(--alt);border-radius:11px;padding:11px 14px;margin-bottom:12px}
+.act-hdr-title{font-weight:800;font-size:14px;color:var(--text);margin-bottom:3px}
+.act-hdr-sub{font-size:12px;color:var(--mid)}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:14px;margin-bottom:11px}
+.q-text{font-size:14px;font-weight:600;color:var(--text);margin-bottom:11px;line-height:1.5}
+.opt{display:flex;align-items:center;gap:9px;width:100%;padding:9px 13px;border:1.5px solid var(--border);border-radius:9px;background:var(--bg);cursor:pointer;font-family:'Nunito',sans-serif;font-size:13.5px;color:var(--text);text-align:left;margin-bottom:7px;transition:all .2s}
+.opt:hover:not(:disabled){border-color:var(--pl);background:var(--pp)}
+.opt.sel{border-color:var(--purple);background:var(--pp);color:var(--purple)}
+.opt.correct{border-color:var(--green);background:var(--gp);color:#2D7D52}
+.opt.wrong{border-color:var(--red);background:var(--rp);color:#B04040}
+.opt-ltr{width:22px;height:22px;border-radius:50%;background:var(--border);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--mid)}
+.sel .opt-ltr{background:var(--purple);color:white}
+.correct .opt-ltr{background:var(--green);color:white}
+.wrong .opt-ltr{background:var(--red);color:white}
+.passage{background:var(--alt);border-left:3px solid var(--purple);border-radius:0 10px 10px 0;padding:13px;margin-bottom:13px;font-size:13.5px;line-height:1.7;color:var(--mid);font-style:italic}
+.tf-row{display:flex;align-items:flex-start;gap:9px;padding:10px;border:1.5px solid var(--border);border-radius:10px;margin-bottom:8px;background:var(--bg)}
+.tf-row.tf-correct{border-color:var(--green);background:var(--gp)}
+.tf-row.tf-wrong{border-color:var(--red);background:var(--rp)}
+.tf-s{font-size:13.5px;color:var(--text);flex:1;line-height:1.5}
+.tf-btns{display:flex;gap:5px;flex-shrink:0;margin-top:1px}
+.tf-btn{padding:4px 10px;border-radius:7px;font-size:12px;font-weight:800;cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-family:'Nunito',sans-serif}
+.tf-btn.active-t{border-color:var(--green);background:var(--gp);color:#2D7D52}
+.tf-btn.active-f{border-color:var(--red);background:var(--rp);color:#B04040}
+.fill-row{margin-bottom:11px}
+.fill-sentence{font-size:14px;color:var(--text);line-height:1.6;margin-bottom:6px}
+.fill-blank{display:inline-block;min-width:80px;border-bottom:2px solid var(--purple);color:var(--purple);font-weight:700;text-align:center;padding:2px 8px}
+.fill-inp{width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'Nunito',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none}
+.fill-inp:focus{border-color:var(--purple)}
+.fill-inp.fill-ok{border-color:var(--green);background:var(--gp);color:#2D7D52}
+.fill-inp.fill-err{border-color:var(--red);background:var(--rp);color:#B04040}
+.crit-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;margin-bottom:8px}
+.crit-row.checked{border-color:var(--green);background:var(--gp)}
+.crit-check{width:20px;height:20px;border-radius:5px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.crit-row.checked .crit-check{background:var(--green);border-color:var(--green);color:white}
+.crit-text{font-size:13.5px;color:var(--text);line-height:1.4}
+.ext-link{display:flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:10px;text-decoration:none;color:var(--text)}
+.ext-link-name{font-size:13.5px;font-weight:700;color:var(--purple)}
+.ext-link-sub{font-size:11px;color:var(--light)}
+.refl-q{font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:6px}
+.refl-inp{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:13.5px;background:var(--bg);color:var(--text);outline:none;resize:vertical;min-height:55px;margin-bottom:12px}
+.refl-inp:focus{border-color:var(--purple)}
+.score-box{text-align:center;padding:22px 16px}
+.score-circle{width:78px;height:78px;border-radius:50%;background:var(--pp);border:3px solid var(--pl);display:flex;align-items:center;justify-content:center;margin:0 auto 11px;font-family:'Fraunces',serif;font-size:24px;font-weight:700;color:var(--purple)}
+.score-circle.great{background:var(--gp);border-color:var(--gl);color:#2D8050}
+.score-msg{font-family:'Fraunces',serif;font-size:17px;font-weight:700;color:var(--text);margin-bottom:5px}
+.score-sub{font-size:13px;color:var(--mid)}
+.level-display{text-align:center;padding:22px 14px;background:linear-gradient(135deg,var(--pp),var(--gp));border-radius:18px;margin-bottom:14px}
+.level-badge{display:inline-block;background:white;border:2px solid var(--pl);border-radius:40px;padding:7px 22px;font-family:'Fraunces',serif;font-size:26px;font-weight:700;color:var(--purple);margin-bottom:7px}
+.track{display:flex;align-items:center;gap:8px;margin:6px 0 12px}
+.track-lbl{font-size:10px;font-weight:800;color:var(--light);width:28px;text-align:center}
+.track-bar{flex:1;height:9px;background:var(--alt);border-radius:10px;overflow:hidden}
+.track-fill{height:100%;border-radius:10px}
+.tf-p{background:linear-gradient(90deg,var(--pl),var(--purple))}
+.tf-g{background:linear-gradient(90deg,var(--gl),var(--green))}
+.tf-a{background:linear-gradient(90deg,#E8C87A,var(--amber))}
+.result-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border)}
+.result-row:last-child{border-bottom:none}
+.result-name{font-size:14px;font-weight:700;color:var(--text)}
+.result-date{font-size:11px;color:var(--light);margin-top:2px}
+.result-score{font-family:'Fraunces',serif;font-size:19px;font-weight:700}
+.s-hi{color:var(--green)}.s-mid{color:var(--amber)}.s-lo{color:var(--red)}
+.cert{background:var(--surface);border:2px dashed var(--border);border-radius:20px;padding:22px;text-align:center;margin-bottom:14px}
+.cert.open{border-style:solid;border-color:var(--gl);background:var(--gp)}
+.cert-ico{font-size:44px;margin-bottom:11px;display:block;filter:grayscale(1)}
+.cert.open .cert-ico{filter:none}
+.cert-title{font-family:'Fraunces',serif;font-size:17px;font-weight:700;color:var(--text);margin-bottom:5px}
+.cert-desc{font-size:13px;color:var(--mid);margin-bottom:12px;line-height:1.5}
+.cert-date{font-size:12px;font-weight:800;color:var(--green)}
+.cert-locked{font-size:12.5px;color:var(--light)}
+.conf{position:fixed;pointer-events:none;z-index:200}
+.cp{position:absolute;width:9px;height:9px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{0%{transform:translateY(-10px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+hr{height:1px;background:var(--border);border:none;margin:12px 0}
+.flex{display:flex;align-items:center}.between{justify-content:space-between}.mt12{margin-top:12px}.mb12{margin-bottom:12px}.center{text-align:center}
+::-webkit-scrollbar{width:0}
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="app-header">
+    <div class="logo">LU<span>MA</span> <span style="font-size:13px;font-weight:600;color:var(--light);font-family:'Nunito',sans-serif">English</span></div>
+    <div class="streak-badge" id="streakEl">🔥 0 días</div>
+  </header>
+  <div class="content">
+    <div id="tab-inicio" class="tab active"></div>
+    <div id="tab-curso" class="tab"></div>
+    <div id="tab-tips" class="tab"></div>
+    <div id="tab-progreso" class="tab"></div>
+    <div id="tab-logros" class="tab"></div>
+  </div>
+  <nav class="nav">
+    <button class="nav-btn active" onclick="switchTab('inicio')" id="nb-inicio"><div class="nav-icon">🏠</div><div class="nav-dot"></div><div class="nav-lbl">Inicio</div></button>
+    <button class="nav-btn" onclick="switchTab('curso')" id="nb-curso"><div class="nav-icon">📚</div><div class="nav-dot"></div><div class="nav-lbl">Curso</div></button>
+    <button class="nav-btn" onclick="switchTab('tips')" id="nb-tips"><div class="nav-icon">💡</div><div class="nav-dot"></div><div class="nav-lbl">Tips</div></button>
+    <button class="nav-btn" onclick="switchTab('progreso')" id="nb-progreso"><div class="nav-icon">📊</div><div class="nav-dot"></div><div class="nav-lbl">Progreso</div></button>
+    <button class="nav-btn" onclick="switchTab('logros')" id="nb-logros"><div class="nav-icon">🏅</div><div class="nav-dot"></div><div class="nav-lbl">Logros</div></button>
+  </nav>
+</div>
+<div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modal"><div class="modal-handle"></div><div class="modal-inner" id="modalInner"></div></div>
+</div>
+<div class="conf" id="conf"></div>
+
+<script>
+// ─── COURSE DATA ─────────────────────────────────────────
+var COURSE = [
+  {id:1,title:"The Kitchen Speaks",months:"Meses 1-2",cls:"b1",
+   lessons:[
+    {id:1,title:"Kitchen Vocabulary Basics",type:"vocabulary",icon:"📖",icoCls:"ico-v",
+     obj:"Identify and use 30+ kitchen tools and cooking terms in professional contexts.",
+     topics:["Kitchen equipment","Food categories","Culinary verbs"],
+     acts:[
+      {type:"quiz",title:"Kitchen Tools Quiz",qs:[
+        {q:"Which tool is used to strain pasta?",opts:["Spatula","Colander","Whisk","Ladle"],c:1},
+        {q:"What is a 'cleaver' primarily used for?",opts:["Stirring sauces","Slicing bread","Chopping large cuts of meat","Peeling vegetables"],c:2},
+        {q:"Which technique means 'cook slowly in liquid'?",opts:["Sear","Broil","Braise","Saute"],c:2},
+        {q:"A 'mandoline' is used to...",opts:["Measure liquids","Slice very thin","Blend soups","Whip cream"],c:1},
+        {q:"'Deglaze' means to...",opts:["Drain pasta","Add liquid to lift browned bits","Season the food","Remove the skin"],c:1}
+      ]},
+      {type:"match",title:"Culinary Terms Match",pairs:[
+        {term:"Mise en place",def:"Everything in its place - prep before service"},
+        {term:"Al dente",def:"Pasta cooked firm to the bite"},
+        {term:"Julienne",def:"Cut into thin matchstick strips"},
+        {term:"Baste",def:"Pour cooking juices over food while it cooks"},
+        {term:"Blanch",def:"Briefly boil then immediately cool in ice water"}
+      ]}
+     ]},
+    {id:2,title:"A Day at the Restaurant",type:"listening",icon:"🎧",icoCls:"ico-l",
+     obj:"Understand and respond to common kitchen and restaurant dialogues between staff.",
+     topics:["Restaurant communication","Service vocabulary","Listening for detail"],
+     acts:[
+      {type:"tf",title:"Kitchen Dialogue Comprehension",
+       passage:"HEAD CHEF: Carlos, table 7 ordered the salmon. Plate it with lemon beurre blanc and asparagus. The VIP at table 3 has a nut allergy — double-check every dish. Maria, how long on the risotto? SOUS CHEF: About four minutes, Chef. Should I hold the pasta for table 5? HEAD CHEF: Yes, hold it until the appetizers are cleared. We are also low on heavy cream.",
+       qs:[
+        {s:"The VIP at table 3 has a gluten allergy.",a:false},
+        {s:"The salmon should be plated with asparagus.",a:true},
+        {s:"The risotto will be ready in about 4 minutes.",a:true},
+        {s:"The pasta for table 5 should go out right away.",a:false},
+        {s:"The kitchen is running low on heavy cream.",a:true}
+       ]},
+      {type:"fill",title:"Complete the Kitchen Phrases",items:[
+        {sent:"Please ___ the onions until they turn golden brown.",blank:"saute"},
+        {sent:"Always ___ for allergens before sending a dish out.",blank:"check"},
+        {sent:"Could you please ___ that order until I give the signal?",blank:"hold"},
+        {sent:"The head chef gave the order to ___ the main courses.",blank:"fire"}
+      ]}
+     ]},
+    {id:3,title:"Recipe Instructions and Grammar",type:"grammar",icon:"📝",icoCls:"ico-g",
+     obj:"Use imperative forms and sequence words to give and follow recipe instructions clearly.",
+     topics:["Imperative form","Sequence connectors","Recipe language"],
+     acts:[
+      {type:"quiz",title:"Grammar in Context",qs:[
+        {q:"Which correctly uses the imperative?",opts:["You should preheat the oven","Preheat the oven to 180C","The oven should be preheated","The oven is preheating"],c:1},
+        {q:"Choose: ___ add the butter, ___ whisk until smooth.",opts:["Finally / then","First / then","Next / last","After / before"],c:1},
+        {q:"In recipes, 'The sauce is reduced' uses...",opts:["Active voice","Past tense","Passive voice","Future tense"],c:2},
+        {q:"Which word introduces the LAST step of a recipe?",opts:["Meanwhile","First","Then","Finally"],c:3},
+        {q:"'Fold in the egg whites gently' means...",opts:["Beat vigorously","Mix gently to keep air in","Pour in quickly","Separate carefully"],c:1}
+      ]},
+      {type:"self",title:"Speaking Practice: Your Recipe",
+       prompt:"Give step-by-step instructions in English for a dish you know well. Use imperatives and at least 5 sequence words: first, then, next, after that, finally. Aim for 90 seconds.",
+       criteria:["Used imperative form throughout","Used 5 or more sequence words","Named all ingredients in English","Spoke for at least 60 seconds","Described the technique clearly"]}
+     ]},
+    {id:4,title:"Ingredients and Measurements",type:"vocabulary",icon:"⚖️",icoCls:"ico-v",
+     obj:"Convert and communicate measurements and quantities correctly in professional kitchen English.",
+     topics:["Imperial vs metric","Quantity expressions","Ingredient descriptors"],
+     acts:[
+      {type:"match",title:"Measurement Match",pairs:[
+        {term:"1 cup",def:"240 ml"},
+        {term:"1 tablespoon",def:"15 ml"},
+        {term:"1 pound (lb)",def:"454 grams"},
+        {term:"1 fluid ounce",def:"30 ml"},
+        {term:"1 teaspoon",def:"5 ml"}
+      ]},
+      {type:"quiz",title:"Quantities in Context",qs:[
+        {q:"How do you say '250g of flour' in a recipe?",opts:["Two fifty flour","A quarter kilo flour","250 grams of flour","Flour 250"],c:2},
+        {q:"Which word means 'a very small amount'?",opts:["A handful","A pinch","A dash","A cup"],c:1},
+        {q:"'Reduce by half' means you should...",opts:["Cook until 50 percent evaporates","Add half more liquid","Use half the recipe","Cook for half the time"],c:0},
+        {q:"A 'knob of butter' is...",opts:["1 cup","A large amount","A small roughly cut piece","Exactly 50g"],c:2}
+      ]}
+     ]},
+    {id:5,title:"Listening: Food Podcast",type:"external",icon:"🎙️",icoCls:"ico-e",
+     obj:"Develop listening stamina and comprehension with native-speed English about food.",
+     topics:["Main idea extraction","Key details","Food culture vocabulary"],
+     acts:[
+      {type:"external",title:"BBC Food Programme",
+       url:"https://www.bbc.co.uk/programmes/b006qnx3",urlLabel:"BBC Food Programme",
+       alt:"https://open.spotify.com/show/0OoHmXDLQlx1gFJYdqCNg9",altLabel:"Spotify - The Food Programme",
+       desc:"Listen to any 10-minute segment. Focus on the main topic and key ideas. Build your listening confidence — you don't need every word.",
+       qs:["What was the main topic of the segment you listened to?","Write 3 food-related words or phrases you heard and understood.","What percentage did you estimate you understood?","Was there anything you had to replay to understand?"]},
+      {type:"self",title:"Summary in English",
+       prompt:"In English, write or say 3 sentences summarizing what the podcast was about. Use your own words.",
+       criteria:["Identified the main topic","Used complete English sentences","Used at least 2 food-related vocabulary words","Wrote without switching to Spanish mentally"]}
+     ]},
+    {id:6,title:"Ordering and Service Dialogue",type:"listening",icon:"🍽️",icoCls:"ico-l",
+     obj:"Handle real restaurant service situations in English — taking orders, recommendations, and requests.",
+     topics:["Service phrases","Polite language","Special requests"],
+     acts:[
+      {type:"tf",title:"Service Dialogue",
+       passage:"WAITER: Good evening, are you ready to order? CUSTOMER: Yes, I will have the grilled sea bass without the capers, please. Can you put the dressing on the side? WAITER: Of course. Our soup of the day is a roasted tomato bisque. CUSTOMER: That sounds lovely. Also my friend is vegetarian — does the risotto use a meat-based stock? WAITER: Let me check with the kitchen for you.",
+       qs:[
+        {s:"The customer ordered the salmon.",a:false},
+        {s:"The customer wants the dressing on the side.",a:true},
+        {s:"The soup of the day is mushroom cream.",a:false},
+        {s:"The customer's friend is vegetarian.",a:true},
+        {s:"The waiter immediately confirmed the risotto is vegetarian.",a:false}
+       ]},
+      {type:"quiz",title:"Polite Service English",qs:[
+        {q:"The most professional way to handle a food complaint is:",opts:["Argue with the customer","Apologize and offer a solution","Ignore it","Blame the kitchen"],c:1},
+        {q:"How do you politely ask if someone is ready to order?",opts:["You ready?","What do you want?","Are you ready to order?","Order now?"],c:2},
+        {q:"Which phrase correctly acknowledges a special request?",opts:["No can do","I will make a note of that for you","We don't do that","Maybe"],c:1},
+        {q:"'I'll have the salmon, please' is said by the:",opts:["Waiter","Customer","Head chef","Manager"],c:1}
+      ]}
+     ]},
+    {id:7,title:"Food Adjectives and Descriptions",type:"vocabulary",icon:"✨",icoCls:"ico-v",
+     obj:"Describe food richly in English — texture, taste, temperature, and presentation.",
+     topics:["Sensory adjectives","Describing dishes","Menu vocabulary"],
+     acts:[
+      {type:"match",title:"Taste and Texture Match",pairs:[
+        {term:"Crispy",def:"Hard surface that makes a sound when bitten"},
+        {term:"Velvety",def:"Very smooth and luxuriously rich in texture"},
+        {term:"Tangy",def:"Sharp, bright, slightly sour taste"},
+        {term:"Savory",def:"Meaty, salty — the opposite of sweet"},
+        {term:"Umami",def:"The 5th flavor — deep, rich, meaty taste"}
+      ]},
+      {type:"quiz",title:"Describe the Dish",qs:[
+        {q:"Which word best describes a steak with a well-developed outer crust?",opts:["Soggy","Seared","Boiled","Mushy"],c:1},
+        {q:"A 'zesty' sauce is...",opts:["Very sweet","Rich and heavy","Bright and citrusy","Completely bland"],c:2},
+        {q:"'Rich and silky' pasta would be best described as...",opts:["Light and watery","Creamy and smooth","Dry and grainy","Tangy and sharp"],c:1},
+        {q:"Which word describes food that is slightly salty from the sea?",opts:["Savory","Briny","Umami","Zesty"],c:1}
+      ]}
+     ]},
+    {id:8,title:"Block 1 Review Challenge",type:"mixed",icon:"🏆",icoCls:"ico-m",
+     obj:"Review and consolidate all Block 1 content — vocabulary, listening, grammar, and service phrases.",
+     topics:["All Block 1 vocabulary","Grammar review","Exam preparation"],
+     acts:[
+      {type:"quiz",title:"Mixed Review Quiz",qs:[
+        {q:"Which cooking technique uses dry heat in an oven?",opts:["Poaching","Roasting","Steaming","Braising"],c:1},
+        {q:"Complete: 'Please ___ the onions until golden.'",opts:["boil","saute","steam","poach"],c:1},
+        {q:"How do you politely offer a recommendation?",opts:["That's the best one","Try this","May I suggest our...?","Order this one"],c:2},
+        {q:"1 tablespoon equals...",opts:["5ml","15ml","30ml","240ml"],c:1},
+        {q:"Which word means 'having a deep, rich flavor'?",opts:["Bland","Watery","Full-bodied","Subtle"],c:2}
+      ]},
+      {type:"self",title:"Exam Prep Self-Check",
+       prompt:"Before Exam 1, honestly evaluate yourself on each Block 1 skill. Where are you strong? Where do you need a final review?",
+       criteria:["Kitchen vocabulary 30 or more words","Service dialogue phrases","Imperative and sequence grammar","Measurement conversions","Food descriptive adjectives"]}
+     ]}
+   ],
+   exam:{id:"exam1",title:"Exam 1 — Block 1",desc:"Complete all 8 lessons before this exam",
+    qs:[
+     {q:"'Mise en place' refers to:",opts:["A French dessert","Preparation and organization before cooking","A type of sauce","A kitchen role"],c:1},
+     {q:"Which phrase correctly handles a special dietary request?",opts:["I want no onions","Could I have that without onions please?","No onions for me","Remove the onions"],c:1},
+     {q:"1 cup of liquid equals:",opts:["120ml","180ml","240ml","300ml"],c:2},
+     {q:"'Deglaze the pan' means:",opts:["Clean the pan","Add liquid to lift browned bits","Reduce the sauce","Grease the pan"],c:1},
+     {q:"Which sequence word introduces the FINAL step?",opts:["First","Meanwhile","Then","Finally"],c:3},
+     {q:"A customer's food is cold. Best response:",opts:["That's not my fault","I'll have the kitchen fix that right away","It was hot when it left","Are you sure?"],c:1},
+     {q:"'Al dente' pasta is:",opts:["Overcooked and soft","Firm to the bite","Raw","Crispy"],c:1},
+     {q:"Which adjective describes a very smooth, luxurious soup?",opts:["Crispy","Crunchy","Velvety","Tangy"],c:2}
+    ]}
+  },
+  {id:2,title:"Pro Kitchen English",months:"Meses 3-4",cls:"b2",
+   lessons:[
+    {id:9,title:"Kitchen Brigade and Roles",type:"vocabulary",icon:"👨‍🍳",icoCls:"ico-v",
+     obj:"Understand professional kitchen hierarchy and communicate using brigade system vocabulary.",
+     topics:["Brigade system roles","Station responsibilities","Formal kitchen communication"],
+     acts:[
+      {type:"quiz",title:"Kitchen Brigade Quiz",qs:[
+        {q:"Who ranks directly below the Head Chef?",opts:["Commis","Sous Chef","Line Cook","Pastry Chef"],c:1},
+        {q:"The 'garde manger' station handles:",opts:["Hot entrees","Desserts","Cold dishes and salads","Sauces"],c:2},
+        {q:"Which title means 'chef of a specific station'?",opts:["Tournant","Chef de partie","Sous chef","Commis"],c:1},
+        {q:"A 'tournant' is best described as:",opts:["A specialty chef","A flexible relief cook covering any station","The kitchen manager","A pastry assistant"],c:1}
+      ]},
+      {type:"self",title:"Describe Your Role",
+       prompt:"In English, describe your current role in the kitchen and your main responsibilities. Use at least 5 professional vocabulary words from this lesson. Speak for 2 minutes.",
+       criteria:["Named your role correctly in English","Described 3 or more daily responsibilities","Used professional kitchen vocabulary","Spoke in complete sentences","Spoke for at least 90 seconds"]}
+     ]},
+    {id:10,title:"Complex Listening: Chef Briefing",type:"listening",icon:"🎧",icoCls:"ico-l",
+     obj:"Follow multi-step professional kitchen instructions given at natural speaking speed.",
+     topics:["Complex multi-step instructions","Technical kitchen vocabulary","Note-taking"],
+     acts:[
+      {type:"tf",title:"Chef Briefing Comprehension",
+       passage:"EXECUTIVE CHEF: Listen up. We are changing the duck confit. Cure the legs 48 hours — not 24 — with the new ratio: two parts kosher salt, one part sugar, double the thyme. After curing, rinse thoroughly and completely dry before the fat. The fat temperature stays at exactly 82 degrees Celsius. We are adding duck stock to the confit fat for more depth. The result should be fall-off-the-bone tender, but the skin must still crisp perfectly in the pan.",
+       qs:[
+        {s:"The curing time is being reduced from 48 to 24 hours.",a:false},
+        {s:"The new recipe uses double the amount of thyme.",a:true},
+        {s:"The fat temperature must be exactly 82 degrees Celsius.",a:true},
+        {s:"Duck stock is being added to the confit fat.",a:true},
+        {s:"The final skin should be left soft.",a:false}
+       ]},
+      {type:"self",title:"Note-Taking Challenge",
+       prompt:"Watch a 5-minute cooking tutorial on YouTube in English. Take notes in English as you watch. Then write a 3-sentence summary of the main technique.",
+       criteria:["Took notes in English while watching","Identified the main technique","Wrote summary without rewatching","Used at least 3 technical terms"]}
+     ]},
+    {id:11,title:"Chef Tutorial Immersion",type:"external",icon:"📺",icoCls:"ico-e",
+     obj:"Comprehend native speaker culinary instruction at natural pace and identify key language patterns.",
+     topics:["Authentic listening","Professional technique vocabulary","Accent adaptation"],
+     acts:[
+      {type:"external",title:"Chef Tutorial on YouTube",
+       url:"https://www.youtube.com/@GordonRamsay",urlLabel:"Gordon Ramsay YouTube",
+       alt:"https://www.youtube.com/results?search_query=professional+chef+tutorial+english",altLabel:"Search cooking tutorials",
+       desc:"Watch any Gordon Ramsay cooking tutorial — 10 to 15 minutes. Focus on the English: how he gives instructions, describes flavors, and commands his kitchen.",
+       qs:["List 5 specific English phrases used to describe taste or technique.","Which command words (imperatives) appeared most often?","How did the chef describe when a dish was perfect or done?"]},
+      {type:"quiz",title:"Authentic Culinary English",qs:[
+        {q:"In culinary English, 'season aggressively' means:",opts:["Use very little salt","Add significant salt and pepper","Use only exotic spices","Season at the end only"],c:1},
+        {q:"'Rest the meat' after cooking means:",opts:["Refrigerate overnight","Let it sit to redistribute juices","Season before cooking","Freeze briefly"],c:1},
+        {q:"'Beautiful color' on a protein indicates:",opts:["It's overcooked","Good Maillard reaction or caramelization","It's undercooked","It needs more seasoning"],c:1}
+      ]}
+     ]},
+    {id:12,title:"Passive Voice in Professional English",type:"grammar",icon:"📝",icoCls:"ico-g",
+     obj:"Use passive voice correctly in recipe writing, professional emails, and kitchen communication.",
+     topics:["Active vs passive voice","Recipe writing conventions","Professional written English"],
+     acts:[
+      {type:"quiz",title:"Passive Voice Mastery",qs:[
+        {q:"Convert to passive: 'The chef roasts the vegetables.'",opts:["The vegetables roasted","The vegetables are roasted by the chef","Chef roasted vegetables","The vegetables roasting"],c:1},
+        {q:"Correct passive for a recipe:",opts:["You bake the cake","Bake the cake","The cake is baked at 180C","The cake bakes itself"],c:2},
+        {q:"In professional emails, passive is preferred because:",opts:["It's easier to write","It sounds more formal and objective","It uses fewer words","It's faster"],c:1},
+        {q:"Change to active: 'The sauce was reduced by the sous chef.'",opts:["The sauce reduces","The sous chef reduced the sauce","Reducing the sauce","Reduced sauce"],c:1}
+      ]},
+      {type:"fill",title:"Complete with Passive Voice",items:[
+        {sent:"All dishes ___ fresh to order.",blank:"are prepared"},
+        {sent:"The bread ___ daily at 6am.",blank:"is baked"},
+        {sent:"Orders ___ by the front-of-house team.",blank:"are taken"},
+        {sent:"The menu ___ every season.",blank:"is updated"}
+      ]}
+     ]},
+    {id:13,title:"Customer Service Excellence",type:"listening",icon:"🤝",icoCls:"ico-l",
+     obj:"Handle difficult customer situations professionally using empathy language and formal English.",
+     topics:["Complaint management","Empathy expressions","Upselling vocabulary"],
+     acts:[
+      {type:"tf",title:"Handling a Complaint",
+       passage:"CUSTOMER: I've been waiting 45 minutes for my starter. This is unacceptable. MANAGER: I sincerely apologize — that is absolutely not the experience we want for our guests. I've spoken with the kitchen and your starter will be out in 3 minutes. May I bring you a complimentary glass of wine? I want to personally ensure the rest of your evening is excellent. CUSTOMER: Fine. But I expected better. MANAGER: You're completely right to expect better, and I promise we will deliver that.",
+       qs:[
+        {s:"The customer waited 30 minutes.",a:false},
+        {s:"The manager apologized without hesitation.",a:true},
+        {s:"The manager offered a free dessert.",a:false},
+        {s:"The manager offered a complimentary glass of wine.",a:true},
+        {s:"The customer was immediately fully satisfied.",a:false}
+       ]},
+      {type:"self",title:"Customer Service Role-Play",
+       prompt:"Practice OUT LOUD in English: A customer complains their steak is overcooked. You are the server. Handle it professionally — apologize, offer a solution, and make them feel valued. Record yourself if possible.",
+       criteria:["Apologized sincerely without excuses","Offered a clear and reasonable solution","Used polite formal language throughout","Did not blame the kitchen to the customer","Maintained a calm and professional tone"]}
+     ]},
+    {id:14,title:"English Idioms in Context",type:"vocabulary",icon:"💬",icoCls:"ico-v",
+     obj:"Understand and use common English idioms in workplace and social contexts.",
+     topics:["Workplace idioms","Food-related idioms","Formal vs informal register"],
+     acts:[
+      {type:"match",title:"Idiom Match",pairs:[
+        {term:"In hot water",def:"In trouble or a difficult situation"},
+        {term:"Too many cooks",def:"Too many people involved causes problems"},
+        {term:"Bite the bullet",def:"Do something difficult without complaining"},
+        {term:"On the same page",def:"Everyone has the same understanding"},
+        {term:"From scratch",def:"Starting completely from the beginning"}
+      ]},
+      {type:"quiz",title:"Idioms in Real Contexts",qs:[
+        {q:"Your chef says: 'We need to be on the same page.' This means:",opts:["Read the same recipe","Have the same understanding","Work the same shift","Be physically together"],c:1},
+        {q:"'We make everything from scratch' means:",opts:["It's very difficult","We use no pre-made ingredients","We start late every day","We follow no recipes"],c:1},
+        {q:"A coworker is 'in hot water' — they are:",opts:["Cooking something","In serious trouble","Very popular","Working overtime"],c:1},
+        {q:"'Bite the bullet and do the prep work' means:",opts:["Eat before working","Accept and do the difficult task","Rush through the work","Ask for help"],c:1}
+      ]}
+     ]},
+    {id:15,title:"Documentary Listening Challenge",type:"external",icon:"🎬",icoCls:"ico-e",
+     obj:"Build advanced listening stamina through authentic documentary content in English.",
+     topics:["Extended listening","Complex spoken ideas","Cultural food vocabulary"],
+     acts:[
+      {type:"external",title:"Food Documentary Immersion",
+       url:"https://www.youtube.com/results?search_query=chef+documentary+english",urlLabel:"Food Documentaries YouTube",
+       alt:"https://www.netflix.com/title/80994078",altLabel:"Chef's Table — Netflix",
+       desc:"Watch 15 to 20 minutes of a food documentary in English — Chef's Table, Salt Fat Acid Heat, or similar. Use English subtitles ONLY. Focus on storytelling language and descriptive vocabulary.",
+       qs:["Describe one chef or concept that stood out — in English.","Write 5 advanced vocabulary words you heard and their meanings.","What percent of dialogue did you understand without subtitles?"]},
+      {type:"self",title:"Progress Comparison",
+       prompt:"Compare your listening comprehension NOW vs your first podcast in Lesson 5. Write 3 English sentences about your improvement and what still challenges you.",
+       criteria:["Noticed and named a specific improvement","Identified a remaining challenge","Set a concrete goal for Block 3","Wrote all 3 sentences in English"]}
+     ]},
+    {id:16,title:"Block 2 Review Challenge",type:"mixed",icon:"🏆",icoCls:"ico-m",
+     obj:"Consolidate Block 2 content: professional vocabulary, passive voice, customer service, and idioms.",
+     topics:["Brigade system","Passive voice","Customer service English","Workplace idioms"],
+     acts:[
+      {type:"quiz",title:"Block 2 Review Quiz",qs:[
+        {q:"Most professional response to a food complaint:",opts:["That's not my fault","I sincerely apologize — let me fix that immediately","Are you sure about that?","The kitchen made a mistake"],c:1},
+        {q:"Correct passive: 'The desserts ___ fresh daily.'",opts:["make","are made","making","made"],c:1},
+        {q:"'Too many cooks spoil the broth' means:",opts:["Too many flavors ruin food","Too many people involved causes problems","Cooking takes a lot of time","Broth needs many ingredients"],c:1},
+        {q:"A 'chef de partie' is responsible for:",opts:["Managing the entire kitchen","Running a specific station","Taking customer orders","Managing kitchen finances"],c:1}
+      ]},
+      {type:"self",title:"Block 2 Self-Assessment",
+       prompt:"Rate your Block 2 skills honestly. Identify your strongest area and the one that needs the most work before Block 3.",
+       criteria:["Professional kitchen vocabulary and brigade system","Passive voice in writing","Customer service professional phrases","Idiom comprehension and usage","Advanced listening stamina"]}
+     ]}
+   ],
+   exam:{id:"exam2",title:"Exam 2 — Block 2",desc:"Complete all lessons 9-16 before this exam",
+    qs:[
+     {q:"The sous chef's primary role is to:",opts:["Manage finances","Assist and replace the head chef","Cook all desserts","Manage the dining room"],c:1},
+     {q:"Correct passive voice:",opts:["The team prepared the mise en place","Mise en place prepared","The mise en place was prepared by the team","Preparing the mise en place"],c:2},
+     {q:"'Biting the bullet' in a work context means:",opts:["Eating quickly","Accepting a difficult situation without complaint","Arguing against a decision","Quitting unexpectedly"],c:1},
+     {q:"Best response when a guest is unhappy with their dish:",opts:["Explain why it's actually correct","Offer to fix it immediately and apologize","Ignore the comment","Ask them to leave"],c:1},
+     {q:"'Garde manger' chef specializes in:",opts:["Hot sauce preparation","Bread baking","Cold preparations and salads","Pastry work"],c:2},
+     {q:"Most appropriate professional email opening:",opts:["Hey, wanted to let you know","Please be advised that the reservation has been confirmed","FYI it's confirmed","Yeah it's booked"],c:1}
+    ]}
+  },
+  {id:3,title:"Master Your English",months:"Meses 5-6",cls:"b3",
+   lessons:[
+    {id:17,title:"News and Current Food Events",type:"external",icon:"📰",icoCls:"ico-e",
+     obj:"Understand current events and news content about food at near-native speed.",
+     topics:["News vocabulary","Formal speech patterns","Global food industry context"],
+     acts:[
+      {type:"external",title:"BBC Food News",
+       url:"https://www.bbc.co.uk/news/topics/cz4pr2gdgynt/food",urlLabel:"BBC Food News",
+       alt:"https://www.theguardian.com/food",altLabel:"The Guardian Food",
+       desc:"Read and listen to 2 BBC food news articles. Activate the audio where available. Focus on formal vocabulary, article structure, and how news is written in English.",
+       qs:["Summarize the main story in 2 English sentences.","List 5 formal or academic vocabulary words you found.","Which verb tense was used most? Why do you think that is?"]},
+      {type:"quiz",title:"Formal English Comprehension",qs:[
+        {q:"In news English, 'the initiative aims to...' means:",opts:["The plan is trying to achieve","The person sets an aim","The city decided","News reported this"],c:0},
+        {q:"Which phrase signals a contrasting idea in formal writing?",opts:["And then","However","Because","Also"],c:1},
+        {q:"'Stakeholders' in a food industry article refers to:",opts:["Chefs only","People with an interest in the outcome","Kitchen equipment","Restaurant owners only"],c:1}
+      ]}
+     ]},
+    {id:18,title:"Writing Restaurant Reviews",type:"mixed",icon:"✍️",icoCls:"ico-m",
+     obj:"Write and understand professional English restaurant reviews using rich descriptive language.",
+     topics:["Review vocabulary","Opinion expressions","Describing experiences formally"],
+     acts:[
+      {type:"match",title:"Review Language Match",pairs:[
+        {term:"Impeccable",def:"Perfect, without any flaws whatsoever"},
+        {term:"Lackluster",def:"Disappointing, not impressive"},
+        {term:"Ambiance",def:"The overall atmosphere and feel of the place"},
+        {term:"Attentive service",def:"Staff that responds quickly and anticipates needs"},
+        {term:"House specialty",def:"The signature dish the restaurant is known for"}
+      ]},
+      {type:"self",title:"Write Your Own Review",
+       prompt:"Write a 5-sentence restaurant review in English for a real place you have visited. Include: food quality, service, ambiance, one specific dish, and a clear recommendation. Use at least 3 vocabulary words from this lesson.",
+       criteria:["Covered all 5 required aspects","Used at least 3 advanced vocabulary words","Named and described one specific dish","Made a clear recommendation","Wrote in grammatically correct English"]}
+     ]},
+    {id:19,title:"Advanced Grammar: Conditionals",type:"grammar",icon:"📝",icoCls:"ico-g",
+     obj:"Use all conditional forms (0, 1st, 2nd, 3rd) correctly in professional and conversational contexts.",
+     topics:["Zero conditional","First conditional","Second conditional","Third conditional"],
+     acts:[
+      {type:"quiz",title:"Conditional Mastery",qs:[
+        {q:"Which is a correct 2nd conditional?",opts:["If I study, I will improve","If I studied more, I would improve faster","If I studied, I improved","I improve if I study"],c:1},
+        {q:"'If you overcook pasta, it becomes mushy' is a:",opts:["1st conditional","2nd conditional","3rd conditional","Zero conditional"],c:3},
+        {q:"Which sentence expresses regret about the past?",opts:["If I cook, I succeed","If I had practiced more, I would have improved","If I practice, I will improve","If I practiced, I would improve"],c:1},
+        {q:"Complete: 'If the restaurant ___ a Michelin star, it ___ more recognition.'",opts:["received / will get","receives / would get","had received / would have received","receives / receives"],c:2}
+      ]},
+      {type:"fill",title:"Complete the Conditionals",items:[
+        {sent:"If I had practiced speaking more, I ___ communicated better with guests.",blank:"would have"},
+        {sent:"If you heat the oil too much, it ___ and burn the food.",blank:"will smoke"},
+        {sent:"If I ___ English every day, I would improve much faster.",blank:"practiced"}
+      ]}
+     ]},
+    {id:20,title:"Cultural Context in English",type:"vocabulary",icon:"🌍",icoCls:"ico-v",
+     obj:"Understand cultural references that native English speakers assume knowledge of.",
+     topics:["Cultural references","English workplace culture","British vs American nuances"],
+     acts:[
+      {type:"quiz",title:"Cultural English Quiz",qs:[
+        {q:"In British English, 'cheers' at the end of an email means:",opts:["Celebrating something","Thank you or Goodbye","Making a toast","Surprise"],c:1},
+        {q:"'Playing it by ear' means:",opts:["Listening very carefully","Deciding as you go / improvising","Using musical instinct","Acting randomly"],c:1},
+        {q:"When an English colleague says 'Not bad' about your food, they likely mean:",opts:["It's terrible","It's mediocre","It's actually quite good","They're being sarcastic"],c:2},
+        {q:"In a professional kitchen, 'Behind you!' means:",opts:["Look at what's behind","I'm passing behind you — watch out","You forgot something","Turn around now"],c:1}
+      ]},
+      {type:"self",title:"Cultural Reflection",
+       prompt:"In English, write 3-5 sentences about one cultural difference between Colombian and English-speaking kitchen culture that you've noticed or read about. What would you adapt in an international kitchen?",
+       criteria:["Identified a specific cultural difference","Reflected personally and authentically","Used correct English sentence structure","Showed cultural awareness and adaptability"]}
+     ]},
+    {id:21,title:"Job Interview in English",type:"mixed",icon:"💼",icoCls:"ico-m",
+     obj:"Prepare for and handle a professional job interview in English with confidence and clarity.",
+     topics:["Interview structure and vocabulary","Self-presentation","Behavioral question frameworks"],
+     acts:[
+      {type:"quiz",title:"Interview Strategy Quiz",qs:[
+        {q:"Best answer to 'Tell me about yourself':",opts:["I was born in Colombia...","I'm a passionate culinary professional with experience in...","I like cooking a lot","I don't know where to start"],c:1},
+        {q:"'What's your greatest weakness?' — best response:",opts:["I have no weaknesses","I'm a perfectionist without elaborating","I struggle with X and here's how I'm actively improving","I work too hard"],c:2},
+        {q:"The STAR interview method stands for:",opts:["Skill, Talent, Ability, Result","Situation, Task, Action, Result","Subject, Topic, Answer, Response","Story, Timeline, Approach, Resolution"],c:1},
+        {q:"Ending an interview with 'I'm very excited about this opportunity' shows:",opts:["Desperation","Genuine enthusiasm and confidence","Overconfidence","Nothing important"],c:1}
+      ]},
+      {type:"self",title:"Live Mock Interview",
+       prompt:"Answer these 3 questions OUT LOUD in English as if in a real interview: 1) Tell me about your culinary background. 2) Describe a difficult kitchen situation and how you handled it. 3) Where do you see yourself in 3 years? Record yourself and listen back.",
+       criteria:["Answered all 3 questions fully","Spoke 60 or more seconds per answer","Used professional vocabulary throughout","Did not switch to Spanish","Had a strong opening and clear closing"]}
+     ]},
+    {id:22,title:"Presenting and Storytelling",type:"mixed",icon:"🎤",icoCls:"ico-m",
+     obj:"Present ideas, dishes, and experiences confidently in English to an audience.",
+     topics:["Presentation language","Storytelling structure","Engaging an audience in English"],
+     acts:[
+      {type:"match",title:"Presentation Language",pairs:[
+        {term:"I'd like to begin by...",def:"Professional opening phrase"},
+        {term:"This brings me to my next point...",def:"Smooth transition between ideas"},
+        {term:"To summarize what I've covered...",def:"Signal for your conclusion"},
+        {term:"What I mean by this is...",def:"Clarification and elaboration phrase"},
+        {term:"Let me give you a concrete example...",def:"Supporting your point with evidence"}
+      ]},
+      {type:"self",title:"2-Minute Presentation Challenge",
+       prompt:"Prepare and deliver a 2-minute presentation in English about a dish you're proud of making. Structure: 1) What the dish is and its origin 2) How you prepare it 3) What makes it special. Use at least 3 presentation phrases from this lesson.",
+       criteria:["Had a clear 3-part structure","Used presentation opening and closing phrases","Spoke for the full 2 minutes","Described the dish with rich vocabulary","Would engage a real audience"]}
+     ]},
+    {id:23,title:"Advanced Podcast Immersion",type:"external",icon:"🎙️",icoCls:"ico-e",
+     obj:"Demonstrate significant listening improvement — aim for 70%+ comprehension of native-speed content.",
+     topics:["Extended listening endurance","Speed and accent adaptation","Complex ideas in English"],
+     acts:[
+      {type:"external",title:"Advanced Listening Challenge",
+       url:"https://open.spotify.com/show/5JGnHMVfPmqWWpXvNMUm3I",urlLabel:"Gastropod Podcast — Spotify",
+       alt:"https://open.spotify.com/show/4Ud4wqM0PJl3lLITkJCBp0",altLabel:"The Sporkful Podcast",
+       desc:"Listen to a 20+ minute episode at full speed, no subtitles. This is your final listening challenge. Aim for 70 percent comprehension.",
+       qs:["What percent did you understand without pausing?","Compare this to Lesson 5 — how much have you improved?","Write a 5-sentence summary of the episode in English.","List 3 phrases you want to adopt into your vocabulary."]},
+      {type:"self",title:"Listening Journey Reflection",
+       prompt:"Reflect in English on your full listening journey across all 6 months. What changed? What still challenges you? Which strategies helped you the most?",
+       criteria:["Showed genuine honest reflection","Made a clear comparison between Block 1 and Block 3","Identified 2 or more strategies that worked","Set a specific goal for continued improvement","Wrote entirely in fluent English"]}
+     ]},
+    {id:24,title:"Final Mastery Review",type:"mixed",icon:"👑",icoCls:"ico-m",
+     obj:"Demonstrate B2-level command across all course skills — vocabulary, listening, grammar, and communication.",
+     topics:["Full course review","B2 self-evaluation","Planning independent learning"],
+     acts:[
+      {type:"quiz",title:"Final Mastery Quiz",qs:[
+        {q:"Which conditional expresses a hypothetical present situation?",opts:["If water boils, it evaporates","If I had a restaurant, I would focus on sustainability","If I study, I'll improve","If I had studied, I would have passed"],c:1},
+        {q:"Most professional way to disagree in a meeting:",opts:["No, that's wrong","I understand your point — however, I see it differently because...","That's completely incorrect","I totally disagree"],c:1},
+        {q:"'Mise en place' describes:",opts:["A classical French dish","Organized preparation before cooking service","A kitchen management style","A type of menu format"],c:1},
+        {q:"A 'meticulous' professional is someone who:",opts:["Works very fast","Pays extreme attention to every detail","Has many recipes memorized","Works very long hours"],c:1}
+      ]},
+      {type:"self",title:"6-Month Journey Reflection",
+       prompt:"Write in English (at least 8 sentences) about your complete English learning journey: What was hardest? What achievement are you most proud of? What can you do now that you couldn't 6 months ago? How will you continue improving?",
+       criteria:["Wrote 8 or more complete sentences in English","Reflected genuinely on real growth","Named specific skills that improved","Described the biggest challenge overcome","Made a clear realistic plan for continued learning"]}
+     ]}
+   ],
+   exam:{id:"exam3",title:"Exam 3 — Final Assessment",desc:"The complete 6-month final evaluation",
+    qs:[
+     {q:"Which correctly uses the 3rd conditional?",opts:["If I work hard, I succeed","If I had prepared better, I would have impressed the panel","If I worked harder, I would succeed","I succeed when I work hard"],c:1},
+     {q:"'Julienne' means:",opts:["A type of sauce","Cut into thin uniform strips","Cook slowly in liquid","A pastry decoration"],c:1},
+     {q:"The STAR method stands for:",opts:["Skills Talent Ability Result","Situation Task Action Result","Story Timeline Approach Resolution","Subject Topic Answer Result"],c:1},
+     {q:"Correct passive voice sentence:",opts:["The chef prepares everything fresh","Everything is prepared fresh daily","We prepare everything fresh","Fresh preparation every day"],c:1},
+     {q:"A 'lackluster' performance is:",opts:["Outstanding","Excellent","Disappointing","Exactly average"],c:2},
+     {q:"In British workplace culture, 'cheers' ends a message meaning:",opts:["Making a toast","Thank you or Goodbye","Well done","Congratulations"],c:1},
+     {q:"Best opening for a professional presentation:",opts:["So basically...","I'd like to begin by sharing something important with you","Hi guys, let's go","Let me just jump straight in"],c:1},
+     {q:"'Umami' is described as:",opts:["Spicy flavor","Sweet and light","The 5th taste — deep, savory, and rich","A type of sour taste"],c:2},
+     {q:"The best listening strategy for native-speed English:",opts:["Translate every word mentally","Focus on keywords and use context to fill gaps","Always ask for repetition","Write down every single word"],c:1},
+     {q:"'From scratch' in a professional kitchen means:",opts:["Starting very late","Using absolutely no pre-made ingredients","Following a recipe from the start","Working very slowly"],c:1}
+    ]}
+  }
+];
+
+var QUOTES = [
+  {text:"The secret of getting ahead is getting started.",author:"Mark Twain"},
+  {text:"Every expert was once a beginner.",author:"Helen Hayes"},
+  {text:"Language is the road map of a culture.",author:"Rita Mae Brown"},
+  {text:"To learn a language is to have one more window to look out of.",author:"Chinese Proverb"},
+  {text:"A different language is a different vision of life.",author:"Federico Fellini"},
+  {text:"The more that you read, the more things you will know.",author:"Dr. Seuss"},
+  {text:"Cooking is an art, but all art requires knowing something about the techniques.",author:"Nathan Myhrvold"}
+];
+
+var TIPS = [
+  {ico:"🎧",title:"Shadowing Technique",body:"Listen to a short clip in English, pause it, and repeat exactly what was said — same tone, same speed, same rhythm. This trains your ear and mouth simultaneously. Start with 30-second segments."},
+  {ico:"📓",title:"Vocabulary Journal",body:"Keep a small notebook. Every new English word you learn, write: the word, its meaning in English (not Spanish), and one example sentence in a kitchen context. Review it every Sunday."},
+  {ico:"🗣️",title:"Think in English",body:"Start with simple things: when you prep mise en place, narrate what you're doing in your head in English. 'I am chopping the onions. Now I am heating the pan.' This builds natural fluency."},
+  {ico:"📺",title:"English Content Only",body:"Change your phone, YouTube, and Netflix to English. Your brain absorbs language passively — every subtitle, menu, and recommendation trains your pattern recognition without you even trying."},
+  {ico:"⏱️",title:"15 Minutes Every Day",body:"Consistency beats intensity. 15 minutes of English every day for 6 months is far more powerful than 3 hours once a week. Your brain builds connections during sleep after small, regular exposures."},
+  {ico:"🎙️",title:"Record Yourself Speaking",body:"The biggest barrier to speaking is not knowing — it's fear. Record a 60-second voice memo in English each morning about your plan for the day. Listen back. Don't judge. Just notice your improvement over weeks."},
+  {ico:"🍳",title:"Kitchen English First",body:"Your fastest path to fluency is through what you already know. Learn every word for your tools, techniques, and ingredients in English first. That vocabulary is your anchor — build from there."},
+  {ico:"🔁",title:"Spaced Repetition",body:"Don't study new words once and move on. Review them at day 1, day 3, day 7, and day 21. This is how long-term memory works. Apps like Anki do this automatically — or do it manually in your vocabulary journal."},
+  {ico:"📰",title:"Read One Article Per Week",body:"Every week, read one English food article — BBC Food, Bon Appetit, or Food52. Don't look up every word. Read for the main idea. Aim for 60% comprehension and be okay with the rest."},
+  {ico:"🤝",title:"Embrace the Mistakes",body:"Every mistake is data, not failure. Native speakers don't judge your accent — they are genuinely impressed you're speaking another language. The only way to get fluent is to speak before you feel ready."}
+];
+
+// ─── STATE ───────────────────────────────────────────────
+var S = {tab:"inicio", progress:{}, streak:0, lastVisit:null};
+
+function loadState() {
+  try {
+    var d = localStorage.getItem("luma_state");
+    if (d) { var p = JSON.parse(d); Object.assign(S, p); }
+    updateStreak();
+  } catch(e) {}
+}
+
+function saveState() {
+  try {
+    S.lastVisit = new Date().toDateString();
+    localStorage.setItem("luma_state", JSON.stringify(S));
+  } catch(e) {}
+}
+
+function updateStreak() {
+  var today = new Date().toDateString();
+  var last = S.lastVisit;
+  if (!last) { S.streak = 1; }
+  else if (last !== today) {
+    var diff = (new Date(today) - new Date(last)) / (1000*60*60*24);
+    S.streak = (diff === 1) ? (S.streak||0) + 1 : 1;
+  }
+  document.getElementById("streakEl").textContent = "🔥 " + S.streak + " día" + (S.streak !== 1 ? "s" : "");
+  saveState();
+}
+
+// ─── NAVIGATION ──────────────────────────────────────────
+function switchTab(t) {
+  var tabs = document.querySelectorAll(".tab");
+  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove("active");
+  var btns = document.querySelectorAll(".nav-btn");
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove("active");
+  document.getElementById("tab-" + t).classList.add("active");
+  document.getElementById("nb-" + t).classList.add("active");
+  S.tab = t;
+  if (t === "inicio") renderInicio();
+  else if (t === "curso") renderCurso();
+  else if (t === "tips") renderTips();
+  else if (t === "progreso") renderProgreso();
+  else if (t === "logros") renderLogros();
+  document.querySelector(".content").scrollTop = 0;
+}
+
+// ─── HELPERS ─────────────────────────────────────────────
+function getAllLessons() {
+  var out = [];
+  for (var i = 0; i < COURSE.length; i++) {
+    for (var j = 0; j < COURSE[i].lessons.length; j++) out.push(COURSE[i].lessons[j]);
+  }
+  return out;
+}
+
+function getLessonById(id) {
+  var all = getAllLessons();
+  for (var i = 0; i < all.length; i++) { if (all[i].id === id) return all[i]; }
+  return null;
+}
+
+function getExamById(eid) {
+  for (var i = 0; i < COURSE.length; i++) { if (COURSE[i].exam.id === eid) return COURSE[i].exam; }
+  return null;
+}
+
+function getBlockForLesson(id) {
+  for (var i = 0; i < COURSE.length; i++) {
+    for (var j = 0; j < COURSE[i].lessons.length; j++) {
+      if (COURSE[i].lessons[j].id === id) return COURSE[i];
+    }
+  }
+  return null;
+}
+
+function totalLessons() { return getAllLessons().length; }
+
+function completedLessons() {
+  var count = 0;
+  var keys = Object.keys(S.progress);
+  for (var i = 0; i < keys.length; i++) {
+    if (S.progress[keys[i]].done && !S.progress[keys[i]].isExam) count++;
+  }
+  return count;
+}
+
+function completedExams() {
+  var count = 0;
+  for (var i = 0; i < COURSE.length; i++) {
+    if (S.progress[COURSE[i].exam.id] && S.progress[COURSE[i].exam.id].done) count++;
+  }
+  return count;
+}
+
+function estimatedLevel() {
+  var pct = completedLessons() / totalLessons();
+  if (pct < 0.15) return {lv:"B1",   desc:"Sólida base — comenzando el recorrido"};
+  if (pct < 0.35) return {lv:"B1+",  desc:"Progresando — vocabulario en expansión"};
+  if (pct < 0.55) return {lv:"B1/B2",desc:"Transición activa — habilidades creciendo"};
+  if (pct < 0.75) return {lv:"B2-",  desc:"Casi nivel B2 — comunicación fluida"};
+  return {lv:"B2", desc:"Nivel alcanzado — comunicación profesional"};
+}
+
+function avgScore() {
+  var scores = [];
+  var keys = Object.keys(S.progress);
+  for (var i = 0; i < keys.length; i++) {
+    var p = S.progress[keys[i]];
+    if (p.score != null) scores.push(p.score);
+  }
+  if (!scores.length) return null;
+  var sum = 0; for (var i = 0; i < scores.length; i++) sum += scores[i];
+  return Math.round(sum / scores.length);
+}
+
+function getNextLesson() {
+  for (var i = 0; i < COURSE.length; i++) {
+    for (var j = 0; j < COURSE[i].lessons.length; j++) {
+      var l = COURSE[i].lessons[j];
+      if (!S.progress[l.id] || !S.progress[l.id].done) return l;
+    }
+  }
+  return null;
+}
+
+function typeLabel(t) {
+  var map = {vocabulary:"Vocabulario",listening:"Listening",grammar:"Gramática",external:"Recurso externo",mixed:"Mixto"};
+  return map[t] || t;
+}
+
+function typeBadge(t) {
+  var map = {vocabulary:"bp",listening:"bg",grammar:"ba",external:"bk",mixed:"bp"};
+  return map[t] || "bk";
+}
+
+function scoreClass(s) { return s >= 80 ? "s-hi" : s >= 60 ? "s-mid" : "s-lo"; }
+function scoreEmoji(s) { return s >= 80 ? "🎉" : s >= 60 ? "👍" : "💪"; }
+
+function confetti() {
+  var el = document.getElementById("conf");
+  el.innerHTML = "";
+  var colors = ["#9B72CF","#6DB88E","#D4A054","#F0E8FA","#B2E0C4"];
+  for (var i = 0; i < 30; i++) {
+    var p = document.createElement("div");
+    p.className = "cp";
+    p.style.left = Math.random()*100 + "vw";
+    p.style.top = Math.random()*-20 + "px";
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDuration = (1.5 + Math.random()*2) + "s";
+    p.style.animationDelay = Math.random()*.8 + "s";
+    el.appendChild(p);
+  }
+  setTimeout(function() { el.innerHTML = ""; }, 4000);
+}
+
+// ─── INICIO ──────────────────────────────────────────────
+function renderInicio() {
+  var el = document.getElementById("tab-inicio");
+  var next = getNextLesson();
+  var done = completedLessons();
+  var total = totalLessons();
+  var lv = estimatedLevel();
+  var quote = QUOTES[new Date().getDay() % QUOTES.length];
+  var pct = Math.round(done / total * 100);
+  var html = "";
+  html += '<div class="page-title">Hola, Andres! 👋</div>';
+  html += '<div class="label mb12">Bienvenido a LUMA English</div>';
+  html += '<div class="stats">';
+  html += '<div class="stat"><div class="stat-val">' + done + '</div><div class="stat-lbl">Lecciones</div></div>';
+  html += '<div class="stat"><div class="stat-val">' + lv.lv + '</div><div class="stat-lbl">Nivel</div></div>';
+  html += '<div class="stat"><div class="stat-val">' + completedExams() + '/3</div><div class="stat-lbl">Exámenes</div></div>';
+  html += '</div>';
+  if (next) {
+    var blk = getBlockForLesson(next.id);
+    html += '<div class="daily" onclick="openLesson(' + next.id + ')">';
+    html += '<div class="daily-tag">📅 Lección del día</div>';
+    html += '<div class="daily-title">' + next.title + '</div>';
+    html += '<div class="daily-meta">' + typeLabel(next.type) + ' · Bloque ' + (blk ? blk.id : 1) + '</div>';
+    html += '<button class="btn-white" onclick="event.stopPropagation();openLesson(' + next.id + ')">Comenzar →</button>';
+    html += '</div>';
+  } else {
+    html += '<div class="card card-g center"><div style="font-size:36px;margin-bottom:8px">🎓</div>';
+    html += '<div class="section-title">¡Curso completado!</div>';
+    html += '<div class="body-text">Has terminado todas las lecciones de LUMA English.</div></div>';
+  }
+  html += '<div class="card card-p">';
+  html += '<div class="label mb12">Progreso del curso</div>';
+  html += '<div class="flex between mb12"><div style="font-size:14px;font-weight:700;color:var(--purple)">' + done + ' / ' + total + ' lecciones</div>';
+  html += '<div class="badge bp">' + pct + '%</div></div>';
+  html += '<div class="prog"><div class="prog-fill" style="width:' + pct + '%"></div></div>';
+  html += '<div class="label mt12" style="color:var(--mid)">' + lv.desc + '</div></div>';
+  html += '<div class="quote"><div class="quote-text">"' + quote.text + '"</div>';
+  html += '<div class="quote-author">— ' + quote.author + '</div></div>';
+  html += '<div class="section-title">Inicio rápido</div>';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">';
+  html += '<div class="card" style="margin-bottom:0;cursor:pointer;text-align:center;padding:14px" onclick="switchTab(\'tips\')">';
+  html += '<div style="font-size:28px;margin-bottom:7px">💡</div>';
+  html += '<div style="font-size:13px;font-weight:700;color:var(--purple)">Tips de aprendizaje</div>';
+  html += '<div style="font-size:11px;color:var(--light);margin-top:3px">Estrategias para mejorar</div></div>';
+  html += '<div class="card" style="margin-bottom:0;cursor:pointer;text-align:center;padding:14px" onclick="switchTab(\'progreso\')">';
+  html += '<div style="font-size:28px;margin-bottom:7px">📊</div>';
+  html += '<div style="font-size:13px;font-weight:700;color:var(--green)">Mi progreso</div>';
+  html += '<div style="font-size:11px;color:var(--light);margin-top:3px">Ver resultados y nivel</div></div></div>';
+  el.innerHTML = html;
+}
+
+// ─── CURSO ───────────────────────────────────────────────
+function renderCurso() {
+  var el = document.getElementById("tab-curso");
+  var done = completedLessons();
+  var total = totalLessons();
+  var html = "";
+  html += '<div class="flex between mb12"><div class="page-title">Curso</div><div class="badge bp">' + done + "/" + total + '</div></div>';
+  html += '<div class="body-text mb12">6 meses · 24 lecciones · 3 exámenes · Enfoque en listening y cocina profesional.</div>';
+
+  for (var bi = 0; bi < COURSE.length; bi++) {
+    var b = COURSE[bi];
+    var bDone = 0;
+    for (var li = 0; li < b.lessons.length; li++) {
+      if (S.progress[b.lessons[li].id] && S.progress[b.lessons[li].id].done) bDone++;
+    }
+    var bPct = Math.round(bDone / b.lessons.length * 100);
+    var examDone = S.progress[b.exam.id] && S.progress[b.exam.id].done;
+    var examSuffix = examDone ? " · ✅ Examen" : "";
+    var bBadge = b.id === 1 ? "bp" : b.id === 2 ? "bg" : "ba";
+
+    html += '<div class="block ' + b.cls + '" id="block-' + b.id + '">';
+    html += '<div class="block-hdr" onclick="toggleBlock(' + b.id + ')">';
+    html += '<div><div class="block-title">' + b.id + ". " + b.title + '</div>';
+    html += '<div class="block-sub">' + b.months + ' · ' + bDone + '/' + b.lessons.length + ' lecciones' + examSuffix + '</div></div>';
+    html += '<div class="block-right"><div class="badge ' + bBadge + '">' + bPct + '%</div>';
+    html += '<div class="chevron">▼</div></div></div>';
+    html += '<div class="lessons-list">';
+
+    for (var li = 0; li < b.lessons.length; li++) {
+      var l = b.lessons[li];
+      var lp = S.progress[l.id];
+      var isDone = lp && lp.done;
+      var scoreStr = (lp && lp.score != null) ? (' <span style="font-weight:700">' + lp.score + '%</span>') : "";
+      var statusCls = isDone ? " done" : "";
+      var statusTxt = isDone ? "✓" : "";
+      var lBadge = typeBadge(l.type);
+      html += '<div class="lesson-item" onclick="openLesson(' + l.id + ')">';
+      html += '<div class="lesson-ico ' + l.icoCls + '">' + l.icon + '</div>';
+      html += '<div class="lesson-body">';
+      html += '<div class="lesson-title">' + l.id + ". " + l.title + '</div>';
+      html += '<div class="lesson-meta"><span class="badge ' + lBadge + '">' + typeLabel(l.type) + '</span>' + scoreStr + '</div>';
+      html += '</div>';
+      html += '<div class="l-status' + statusCls + '">' + statusTxt + '</div>';
+      html += '</div>';
+    }
+
+    var examRowCls = examDone ? " done" : "";
+    var examIco = examDone ? "✅" : "📋";
+    var examSubText = examDone ? ("Completado · " + S.progress[b.exam.id].score + "%") : b.exam.desc;
+    html += '<div class="exam-row' + examRowCls + '" onclick="openExam(\'' + b.exam.id + '\')">';
+    html += '<div style="font-size:22px">' + examIco + '</div>';
+    html += '<div><div class="exam-title">' + b.exam.title + '</div>';
+    html += '<div class="exam-sub">' + examSubText + '</div></div></div>';
+    html += '</div></div>';
+  }
+
+  el.innerHTML = html;
+  // Open first incomplete block
+  for (var bi = 0; bi < COURSE.length; bi++) {
+    var b = COURSE[bi];
+    var incomplete = false;
+    for (var li = 0; li < b.lessons.length; li++) {
+      if (!S.progress[b.lessons[li].id] || !S.progress[b.lessons[li].id].done) { incomplete = true; break; }
+    }
+    if (incomplete) { document.getElementById("block-" + b.id).classList.add("open"); break; }
+  }
+}
+
+function toggleBlock(id) {
+  var el = document.getElementById("block-" + id);
+  if (el) el.classList.toggle("open");
+}
+
+// ─── TIPS ────────────────────────────────────────────────
+function renderTips() {
+  var el = document.getElementById("tab-tips");
+  var html = "";
+  html += '<div class="page-title mb12">💡 Tips de Aprendizaje</div>';
+  html += '<div class="body-text mb12">Estrategias probadas para aprender inglés más rápido — especialmente para mejorar el listening.</div>';
+  for (var i = 0; i < TIPS.length; i++) {
+    var t = TIPS[i];
+    html += '<div class="tip-card">';
+    html += '<div class="tip-ico">' + t.ico + '</div>';
+    html += '<div><div class="tip-title">' + t.title + '</div>';
+    html += '<div class="tip-body">' + t.body + '</div></div></div>';
+  }
+  html += '<div class="card card-p center">';
+  html += '<div style="font-size:28px;margin-bottom:8px">🎯</div>';
+  html += '<div class="section-title" style="margin-bottom:4px">Tu objetivo principal</div>';
+  html += '<div class="body-text">Tu prioridad es el <strong>listening</strong>. Exponte al inglés auténtico todos los días — podcasts, videos, canciones. Tu oído se entrena con exposición constante, no solo con estudio.</div>';
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+// ─── MODAL ───────────────────────────────────────────────
+var modalState = {};
+var _quizAnswers = {};
+var _tfAnswers = {};
+var _matchAnswers = {};
+var _matchShuffled = [];
+
+function openLesson(id) {
+  var l = getLessonById(id);
+  if (!l) return;
+  modalState = {type:"lesson", id:id, step:0, scores:[]};
+  _quizAnswers = {}; _tfAnswers = {}; _matchAnswers = {};
+  showModal();
+  renderLessonStep();
+}
+
+function openExam(eid) {
+  var exam = getExamById(eid);
+  if (!exam) return;
+  modalState = {type:"exam", id:eid, step:0, examAnswers:{}, examScore:0};
+  showModal();
+  renderExamStep();
+}
+
+function showModal() {
+  document.getElementById("overlay").classList.add("on");
+  document.body.style.overflow = "hidden";
+}
+
+function closeModalFull() {
+  document.getElementById("overlay").classList.remove("on");
+  document.body.style.overflow = "";
+  if (S.tab === "inicio") renderInicio();
+  else if (S.tab === "curso") renderCurso();
+  else if (S.tab === "progreso") renderProgreso();
+  else if (S.tab === "logros") renderLogros();
+}
+
+function handleOverlayClick(e) {
+  if (e.target.id === "overlay") closeModalFull();
+}
+
+// ─── LESSON MODAL ─────────────────────────────────────────
+function renderLessonStep() {
+  var l = getLessonById(modalState.id);
+  if (!l) return;
+  var inner = document.getElementById("modalInner");
+  var step = modalState.step;
+  _quizAnswers = {}; _tfAnswers = {}; _matchAnswers = {};
+
+  if (step === 0) {
+    var lp = S.progress[l.id];
+    var isDone = lp && lp.done;
+    var doneHtml = isDone ? ('<div class="card card-g center mb12"><div style="font-size:20px">✅</div><div style="font-size:13px;font-weight:700;color:var(--green);margin-top:4px">Completada · ' + lp.score + '%</div></div>') : "";
+    var topicsHtml = "";
+    for (var i = 0; i < l.topics.length; i++) topicsHtml += '<span class="badge bp">' + l.topics[i] + '</span> ';
+    var actsHtml = "";
+    for (var i = 0; i < l.acts.length; i++) {
+      actsHtml += '<div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">';
+      actsHtml += '<div style="width:24px;height:24px;border-radius:50%;background:var(--purple);color:white;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">' + (i+1) + '</div>';
+      actsHtml += '<div style="font-size:13.5px;font-weight:600">' + l.acts[i].title + '</div></div>';
+    }
+    var badgeCls = typeBadge(l.type);
+    inner.innerHTML = '<div class="flex between mb12"><div class="badge ' + badgeCls + '">' + typeLabel(l.type) + '</div><button class="btn btn-sm btn-out" onclick="closeModalFull()">✕ Cerrar</button></div>'
+      + '<div style="font-size:32px;margin-bottom:8px">' + l.icon + '</div>'
+      + '<div class="page-title mb12">' + l.title + '</div>'
+      + '<div class="card card-p"><div class="label mb12">🎯 Objetivo</div><div class="body-text">' + l.obj + '</div></div>'
+      + '<div class="card"><div class="label mb12">📌 Temas</div><div style="display:flex;flex-wrap:wrap;gap:7px">' + topicsHtml + '</div></div>'
+      + '<div class="card card-g"><div class="label mb12">📝 Actividades (' + l.acts.length + ')</div>' + actsHtml + '</div>'
+      + doneHtml
+      + '<button class="btn btn-p btn-full" onclick="nextLessonStep()" style="margin-bottom:16px">Comenzar →</button>';
+
+  } else if (step >= 1 && step <= l.acts.length) {
+    var act = l.acts[step - 1];
+    inner.innerHTML = '<div class="flex between mb12"><div class="label">Actividad ' + step + ' de ' + l.acts.length + '</div>'
+      + '<button class="btn btn-sm btn-out" onclick="closeModalFull()">✕</button></div>'
+      + '<div id="actContent"></div>'
+      + '<button class="btn btn-p btn-full" id="actSubmit" onclick="submitActivity()" style="margin-bottom:16px">Verificar →</button>';
+    renderActivity(act);
+
+  } else {
+    var total = modalState.scores.length;
+    var sum = 0;
+    for (var i = 0; i < modalState.scores.length; i++) sum += modalState.scores[i];
+    var avg = total > 0 ? Math.round(sum / total) : 0;
+    var topicsHtml = "";
+    for (var i = 0; i < l.topics.length; i++) topicsHtml += '<span class="badge bp">✓ ' + l.topics[i] + '</span> ';
+    var circleCls = avg >= 80 ? " great" : "";
+    inner.innerHTML = '<div class="score-box">'
+      + '<div class="score-circle' + circleCls + '">' + avg + '%</div>'
+      + '<div class="score-msg">' + scoreEmoji(avg) + ' ' + (avg>=80?"¡Excelente!":avg>=60?"¡Bien hecho!":"Sigue practicando") + '</div>'
+      + '<div class="score-sub">' + l.title + '</div></div>'
+      + '<div class="card card-p mb12"><div class="label mb12">✓ Temas completados</div><div style="display:flex;flex-wrap:wrap;gap:7px">' + topicsHtml + '</div></div>'
+      + '<button class="btn btn-g btn-full" onclick="completeLesson(' + l.id + ',' + avg + ')" style="margin-bottom:10px">✅ Marcar como completada</button>'
+      + '<button class="btn btn-out btn-full" onclick="closeModalFull()" style="margin-bottom:16px">Volver al curso</button>';
+    if ((!S.progress[l.id] || !S.progress[l.id].done) && avg >= 60) setTimeout(confetti, 300);
+  }
+  document.getElementById("modal").scrollTop = 0;
+}
+
+function renderActivity(act) {
+  var el = document.getElementById("actContent");
+  if (!el) return;
+  var letters = ["A","B","C","D"];
+  var html = "";
+
+  if (act.type === "quiz") {
+    html += '<div class="act-hdr"><div class="act-hdr-title">' + act.title + '</div><div class="act-hdr-sub">Selecciona la respuesta correcta.</div></div>';
+    for (var qi = 0; qi < act.qs.length; qi++) {
+      var q = act.qs[qi];
+      html += '<div class="q-card" id="q' + qi + '"><div class="q-text">' + (qi+1) + '. ' + q.q + '</div>';
+      for (var oi = 0; oi < q.opts.length; oi++) {
+        html += '<button class="opt" onclick="selectOpt(' + qi + ',' + oi + ')" id="opt' + qi + '-' + oi + '"><span class="opt-ltr">' + letters[oi] + '</span>' + q.opts[oi] + '</button>';
+      }
+      html += '</div>';
+    }
+
+  } else if (act.type === "tf") {
+    html += '<div class="act-hdr"><div class="act-hdr-title">' + act.title + '</div><div class="act-hdr-sub">Lee el texto y marca Verdadero (V) o Falso (F).</div></div>';
+    html += '<div class="passage">' + act.passage + '</div>';
+    for (var qi = 0; qi < act.qs.length; qi++) {
+      html += '<div class="tf-row" id="tfr' + qi + '"><div class="tf-s">' + (qi+1) + '. ' + act.qs[qi].s + '</div>';
+      html += '<div class="tf-btns"><button class="tf-btn" id="tf' + qi + '-t" onclick="selectTF(' + qi + ',true)">V</button>';
+      html += '<button class="tf-btn" id="tf' + qi + '-f" onclick="selectTF(' + qi + ',false)">F</button></div></div>';
+    }
+
+  } else if (act.type === "match") {
+    var shuffled = [];
+    for (var i = 0; i < act.pairs.length; i++) shuffled.push({term:act.pairs[i].term,def:act.pairs[i].def,origIdx:i});
+    shuffled.sort(function() { return Math.random() - 0.5; });
+    _matchShuffled = shuffled;
+    html += '<div class="act-hdr"><div class="act-hdr-title">' + act.title + '</div><div class="act-hdr-sub">Para cada término, selecciona la definición correcta.</div></div>';
+    for (var pi = 0; pi < act.pairs.length; pi++) {
+      html += '<div class="q-card" id="mq' + pi + '"><div class="q-text"><strong>' + act.pairs[pi].term + '</strong></div>';
+      for (var si = 0; si < shuffled.length; si++) {
+        html += '<button class="opt" onclick="selectMatch(' + pi + ',' + si + ')" id="mo' + pi + '-' + si + '"><span class="opt-ltr">' + letters[si] + '</span>' + shuffled[si].def + '</button>';
+      }
+      html += '</div>';
+    }
+
+  } else if (act.type === "fill") {
+    html += '<div class="act-hdr"><div class="act-hdr-title">' + act.title + '</div><div class="act-hdr-sub">Escribe la palabra correcta para completar cada oracion.</div></div>';
+    for (var i = 0; i < act.items.length; i++) {
+      var sentDisplay = act.items[i].sent.replace("___", '<span class="fill-blank">___</span>');
+      html += '<div class="fill-row"><div class="fill-sentence">' + sentDisplay + '</div>';
+      html += '<input class="fill-inp" id="fill' + i + '" type="text" placeholder="Tu respuesta..."></div>';
+    }
+
+  } else if (act.type === "external") {
+    html += '<div class="act-hdr"><div class="act-hdr-title">' + act.title + '</div><div class="act-hdr-sub">Accede al recurso y responde las preguntas de reflexion.</div></div>';
+    html += '<a href="' + act.url + '" target="_blank" class="ext-link"><span style="font-size:22px">🔗</span><div><div class="ext-link-name">' + act.urlLabel + '</div><div class="ext-link-sub">Enlace principal</div></div></a>';
+    if (act.alt) {
+      html += '<a href="' + act.alt + '" target="_blank" class="ext-link"><span style="font-size:22px">🔗</span><div><div class="ext-link-name">' + act.altLabel + '</div><div class="ext-link-sub">Alternativa</div></div></a>';
+    }
+    html += '<div class="body-text mb12">' + act.desc + '</div>';
+    for (var i = 0; i < act.qs.length; i++) {
+      var q = typeof act.qs[i] === "string" ? act.qs[i] : act.qs[i].q;
+      html += '<div style="margin-bottom:10px"><div class="refl-q">' + (i+1) + '. ' + q + '</div>';
+      html += '<textarea class="refl-inp" id="extq' + i + '" placeholder="Tu respuesta en ingles..."></textarea></div>';
+    }
+
+  } else if (act.type === "self") {
+    html += '<div class="act-hdr"><div class="act-hdr-title">' + act.title + '</div><div class="act-hdr-sub">Autoevaluacion — se honesto contigo mismo.</div></div>';
+    html += '<div class="card card-p mb12"><div class="label mb12">🎯 Tu tarea</div><div class="body-text">' + act.prompt + '</div></div>';
+    html += '<div class="label mb12">✅ Marca cada criterio que hayas cumplido:</div>';
+    for (var i = 0; i < act.criteria.length; i++) {
+      html += '<div class="crit-row" id="cr' + i + '" onclick="toggleCrit(' + i + ')">';
+      html += '<div class="crit-check" id="cch' + i + '"></div>';
+      html += '<div class="crit-text">' + act.criteria[i] + '</div></div>';
+    }
+  }
+
+  el.innerHTML = html;
+}
+
+function selectOpt(qi, oi) {
+  var q = document.getElementById("q" + qi);
+  if (!q || q.dataset.locked) return;
+  var opts = q.querySelectorAll(".opt");
+  for (var i = 0; i < opts.length; i++) opts[i].classList.remove("sel");
+  var btn = document.getElementById("opt" + qi + "-" + oi);
+  if (btn) btn.classList.add("sel");
+  _quizAnswers[qi] = oi;
+}
+
+function selectTF(i, val) {
+  _tfAnswers[i] = val;
+  var bt = document.getElementById("tf" + i + "-t");
+  var bf = document.getElementById("tf" + i + "-f");
+  if (bt) bt.className = "tf-btn" + (val ? " active-t" : "");
+  if (bf) bf.className = "tf-btn" + (!val ? " active-f" : "");
+}
+
+function selectMatch(qi, si) {
+  _matchAnswers[qi] = si;
+  var q = document.getElementById("mq" + qi);
+  if (!q) return;
+  var opts = q.querySelectorAll(".opt");
+  for (var i = 0; i < opts.length; i++) opts[i].classList.remove("sel");
+  var btn = document.getElementById("mo" + qi + "-" + si);
+  if (btn) btn.classList.add("sel");
+}
+
+function toggleCrit(i) {
+  var row = document.getElementById("cr" + i);
+  var check = document.getElementById("cch" + i);
+  if (!row || !check) return;
+  row.classList.toggle("checked");
+  check.textContent = row.classList.contains("checked") ? "✓" : "";
+}
+
+function submitActivity() {
+  var l = getLessonById(modalState.id);
+  if (!l) return;
+  var act = l.acts[modalState.step - 1];
+  var score = 0;
+  var btn = document.getElementById("actSubmit");
+
+  if (act.type === "quiz") {
+    var correct = 0;
+    for (var qi = 0; qi < act.qs.length; qi++) {
+      var q = act.qs[qi];
+      var chosen = _quizAnswers[qi];
+      var qel = document.getElementById("q" + qi);
+      if (qel) qel.dataset.locked = "1";
+      if (chosen !== undefined) {
+        for (var oi = 0; oi < q.opts.length; oi++) {
+          var ob = document.getElementById("opt" + qi + "-" + oi);
+          if (ob) {
+            ob.disabled = true;
+            ob.classList.remove("sel");
+            if (oi === q.c) ob.classList.add("correct");
+            else if (oi === chosen) ob.classList.add("wrong");
+          }
+        }
+        if (chosen === q.c) correct++;
+      }
+    }
+    score = Math.round(correct / act.qs.length * 100);
+
+  } else if (act.type === "tf") {
+    var correct = 0;
+    for (var qi = 0; qi < act.qs.length; qi++) {
+      var chosen = _tfAnswers[qi];
+      var row = document.getElementById("tfr" + qi);
+      var bt = document.getElementById("tf" + qi + "-t");
+      var bf = document.getElementById("tf" + qi + "-f");
+      if (bt) bt.disabled = true;
+      if (bf) bf.disabled = true;
+      if (chosen !== undefined) {
+        if (chosen === act.qs[qi].a) { correct++; if (row) row.classList.add("tf-correct"); }
+        else { if (row) row.classList.add("tf-wrong"); }
+      }
+    }
+    score = Math.round(correct / act.qs.length * 100);
+
+  } else if (act.type === "match") {
+    var correct = 0;
+    for (var pi = 0; pi < act.pairs.length; pi++) {
+      var si = _matchAnswers[pi];
+      if (si === undefined) continue;
+      var isOk = (_matchShuffled[si].origIdx === pi);
+      var q = document.getElementById("mq" + pi);
+      if (q) { var opts = q.querySelectorAll(".opt"); for (var x = 0; x < opts.length; x++) opts[x].disabled = true; }
+      var selBtn = document.getElementById("mo" + pi + "-" + si);
+      if (isOk) { correct++; if (selBtn) selBtn.classList.add("correct"); }
+      else { if (selBtn) selBtn.classList.add("wrong"); }
+    }
+    score = Math.round(correct / act.pairs.length * 100);
+
+  } else if (act.type === "fill") {
+    var correct = 0;
+    for (var i = 0; i < act.items.length; i++) {
+      var inp = document.getElementById("fill" + i);
+      if (!inp) continue;
+      inp.disabled = true;
+      var val = inp.value.trim().toLowerCase();
+      var expected = act.items[i].blank.toLowerCase();
+      if (val === expected) { correct++; inp.classList.add("fill-ok"); }
+      else { inp.classList.add("fill-err"); inp.value = 'Correcto: "' + act.items[i].blank + '"'; }
+    }
+    score = Math.round(correct / act.items.length * 100);
+
+  } else if (act.type === "external") {
+    score = 100;
+
+  } else if (act.type === "self") {
+    var checked = document.querySelectorAll(".crit-row.checked").length;
+    score = Math.round(checked / act.criteria.length * 100);
+  }
+
+  modalState.scores.push(score);
+  if (btn) {
+    btn.textContent = "✓ Siguiente (" + score + "%)";
+    btn.onclick = nextLessonStep;
+  }
+}
+
+function nextLessonStep() {
+  var l = getLessonById(modalState.id);
+  if (!l) return;
+  modalState.step++;
+  _quizAnswers = {}; _tfAnswers = {}; _matchAnswers = {};
+  renderLessonStep();
+}
+
+function completeLesson(id, score) {
+  S.progress[id] = {done:true, score:score, date:new Date().toLocaleDateString("es-CO")};
+  saveState();
+  closeModalFull();
+}
+
+// ─── EXAM MODAL ───────────────────────────────────────────
+function renderExamStep() {
+  var exam = getExamById(modalState.id);
+  if (!exam) return;
+  var inner = document.getElementById("modalInner");
+  var step = modalState.step;
+  var letters = ["A","B","C","D"];
+
+  if (step === 0) {
+    var ep = S.progress[exam.id];
+    var doneHtml = (ep && ep.done) ? ('<div class="card card-g center mb12"><div style="font-size:24px;margin-bottom:6px">✅</div><div style="font-weight:700;color:var(--green);font-size:14px">Completado · ' + ep.score + '%</div></div>') : "";
+    inner.innerHTML = '<div class="flex between mb12"><div class="badge ba">📋 Examen</div><button class="btn btn-sm btn-out" onclick="closeModalFull()">✕</button></div>'
+      + '<div style="font-size:36px;margin-bottom:10px">📋</div>'
+      + '<div class="page-title mb12">' + exam.title + '</div>'
+      + '<div class="card card-a mb12"><div class="label mb12">ℹ️ Instrucciones</div><div class="body-text">' + exam.qs.length + ' preguntas de opcion multiple. Selecciona la respuesta mas correcta.</div></div>'
+      + doneHtml
+      + '<button class="btn btn-p btn-full" onclick="startExam()" style="margin-bottom:16px">Comenzar examen →</button>';
+
+  } else if (step === 1) {
+    var html = '<div class="flex between mb12"><div class="label">Examen · ' + exam.qs.length + ' preguntas</div><button class="btn btn-sm btn-out" onclick="closeModalFull()">✕</button></div>';
+    for (var qi = 0; qi < exam.qs.length; qi++) {
+      var q = exam.qs[qi];
+      html += '<div class="q-card" id="eq' + qi + '"><div class="q-text">' + (qi+1) + '. ' + q.q + '</div>';
+      for (var oi = 0; oi < q.opts.length; oi++) {
+        html += '<button class="opt" onclick="selectExamOpt(' + qi + ',' + oi + ')" id="eo' + qi + '-' + oi + '"><span class="opt-ltr">' + letters[oi] + '</span>' + q.opts[oi] + '</button>';
+      }
+      html += '</div>';
+    }
+    html += '<button class="btn btn-p btn-full" onclick="submitExam()" style="margin-bottom:16px">Entregar examen →</button>';
+    inner.innerHTML = html;
+
+  } else {
+    var s = modalState.examScore || 0;
+    var circleCls = s >= 80 ? " great" : "";
+    var resultHtml = (s >= 60)
+      ? '<div class="card card-g center mb12"><div style="font-size:24px;margin-bottom:6px">🏅</div><div style="font-weight:700;color:var(--green);font-size:14px">¡Logro desbloqueado! Ve a la pestana Logros.</div></div>'
+      : '<div class="card card-a center mb12"><div class="body-text">Revisa las lecciones del bloque y vuelve cuando estes listo.</div></div>';
+    inner.innerHTML = '<div class="score-box">'
+      + '<div class="score-circle' + circleCls + '">' + s + '%</div>'
+      + '<div class="score-msg">' + scoreEmoji(s) + ' ' + (s>=80?"¡Excelente resultado!":s>=60?"¡Aprobado!":"Sigue practicando") + '</div>'
+      + '<div class="score-sub">' + exam.title + '</div></div>'
+      + resultHtml
+      + '<button class="btn btn-g btn-full" onclick="completeExam(\'' + modalState.id + '\',' + s + ')" style="margin-bottom:10px">✅ Guardar resultado</button>'
+      + '<button class="btn btn-out btn-full" onclick="closeModalFull()" style="margin-bottom:16px">Cerrar</button>';
+    if (s >= 60) setTimeout(confetti, 300);
+  }
+  document.getElementById("modal").scrollTop = 0;
+}
+
+function startExam() {
+  modalState.step = 1;
+  modalState.examAnswers = {};
+  _quizAnswers = {};
+  renderExamStep();
+}
+
+function selectExamOpt(qi, oi) {
+  var q = document.getElementById("eq" + qi);
+  if (!q || q.dataset.locked) return;
+  var opts = q.querySelectorAll(".opt");
+  for (var i = 0; i < opts.length; i++) opts[i].classList.remove("sel");
+  var btn = document.getElementById("eo" + qi + "-" + oi);
+  if (btn) btn.classList.add("sel");
+  modalState.examAnswers[qi] = oi;
+}
+
+function submitExam() {
+  var exam = getExamById(modalState.id);
+  if (!exam) return;
+  var correct = 0;
+  for (var qi = 0; qi < exam.qs.length; qi++) {
+    var q = exam.qs[qi];
+    var chosen = modalState.examAnswers[qi];
+    var qel = document.getElementById("eq" + qi);
+    if (qel) qel.dataset.locked = "1";
+    if (chosen !== undefined) {
+      for (var oi = 0; oi < q.opts.length; oi++) {
+        var ob = document.getElementById("eo" + qi + "-" + oi);
+        if (ob) {
+          ob.disabled = true;
+          ob.classList.remove("sel");
+          if (oi === q.c) ob.classList.add("correct");
+          else if (oi === chosen) ob.classList.add("wrong");
+        }
+      }
+      if (chosen === q.c) correct++;
+    }
+  }
+  modalState.examScore = Math.round(correct / exam.qs.length * 100);
+  var self = this;
+  setTimeout(function() { modalState.step = 2; renderExamStep(); }, 600);
+}
+
+function completeExam(eid, score) {
+  S.progress[eid] = {done:true, score:score, isExam:true, date:new Date().toLocaleDateString("es-CO")};
+  saveState();
+  closeModalFull();
+}
+
+// ─── PROGRESO ─────────────────────────────────────────────
+function renderProgreso() {
+  var el = document.getElementById("tab-progreso");
+  var lv = estimatedLevel();
+  var done = completedLessons();
+  var total = totalLessons();
+  var avg = avgScore();
+  var html = "";
+  html += '<div class="page-title mb12">Progreso</div>';
+  html += '<div class="level-display"><div class="label mb12">Nivel estimado actual</div>';
+  html += '<div class="level-badge">' + lv.lv + '</div>';
+  html += '<div style="font-size:13px;color:var(--mid);margin-top:5px">' + lv.desc + '</div></div>';
+  html += '<div class="card"><div class="section-title">Estadísticas generales</div>';
+  html += '<div class="stats">';
+  html += '<div class="stat"><div class="stat-val">' + done + '/' + total + '</div><div class="stat-lbl">Lecciones</div></div>';
+  html += '<div class="stat"><div class="stat-val">' + (avg != null ? avg + "%" : "—") + '</div><div class="stat-lbl">Promedio</div></div>';
+  html += '<div class="stat"><div class="stat-val">' + completedExams() + '/3</div><div class="stat-lbl">Exámenes</div></div>';
+  html += '</div></div>';
+  html += '<div class="card"><div class="section-title">Progreso por bloque</div>';
+  for (var bi = 0; bi < COURSE.length; bi++) {
+    var b = COURSE[bi];
+    var bDone = 0;
+    for (var li = 0; li < b.lessons.length; li++) {
+      if (S.progress[b.lessons[li].id] && S.progress[b.lessons[li].id].done) bDone++;
+    }
+    var bPct = Math.round(bDone / b.lessons.length * 100);
+    var bBadge = b.id === 1 ? "bp" : b.id === 2 ? "bg" : "ba";
+    var tfc = b.id === 1 ? "tf-p" : b.id === 2 ? "tf-g" : "tf-a";
+    var lvLabel = b.id === 1 ? "B1" : b.id === 2 ? "B1+" : "B2";
+    html += '<div style="margin-bottom:4px"><div class="flex between">';
+    html += '<div style="font-size:13px;font-weight:700">' + b.title + '</div>';
+    html += '<div class="badge ' + bBadge + '">' + bPct + '%</div></div>';
+    html += '<div class="track"><div class="track-lbl">' + lvLabel + '</div>';
+    html += '<div class="track-bar"><div class="track-fill ' + tfc + '" style="width:' + bPct + '%"></div></div>';
+    html += '<div class="track-lbl">' + bDone + '/' + b.lessons.length + '</div></div></div>';
+  }
+  html += '</div>';
+  html += '<div class="card"><div class="section-title">Resultados de exámenes</div>';
+  for (var bi = 0; bi < COURSE.length; bi++) {
+    var b = COURSE[bi];
+    var ep = S.progress[b.exam.id];
+    html += '<div class="result-row"><div><div class="result-name">' + b.exam.title + '</div>';
+    html += '<div class="result-date">' + (ep && ep.done ? ep.date : "Pendiente") + '</div></div>';
+    if (ep && ep.done) html += '<div class="result-score ' + scoreClass(ep.score) + '">' + ep.score + '%</div>';
+    else html += '<div class="badge bk">—</div>';
+    html += '</div>';
+  }
+  html += '</div>';
+  var lessonsDone = [];
+  var all = getAllLessons();
+  for (var i = all.length - 1; i >= 0 && lessonsDone.length < 6; i--) {
+    if (S.progress[all[i].id] && S.progress[all[i].id].done) lessonsDone.push(all[i]);
+  }
+  if (lessonsDone.length > 0) {
+    html += '<div class="card"><div class="section-title">Últimas lecciones completadas</div>';
+    for (var i = 0; i < lessonsDone.length; i++) {
+      var ll = lessonsDone[i];
+      var lp = S.progress[ll.id];
+      html += '<div class="result-row"><div><div class="result-name">' + ll.title + '</div>';
+      html += '<div class="result-date">' + (lp.date || "") + ' · ' + typeLabel(ll.type) + '</div></div>';
+      html += '<div class="result-score ' + scoreClass(lp.score) + '">' + lp.score + '%</div></div>';
+    }
+    html += '</div>';
+  }
+  html += '<div class="card card-p center"><div style="font-size:28px;margin-bottom:8px">🎯</div>';
+  html += '<div class="section-title" style="margin-bottom:4px">Meta: nivel B2</div>';
+  html += '<div class="body-text">Al completar el curso y los 3 exámenes tendrás herramientas sólidas de nivel B2 — especialmente en listening y vocabulario profesional de cocina.</div></div>';
+  el.innerHTML = html;
+}
+
+// ─── LOGROS ───────────────────────────────────────────────
+function renderLogros() {
+  var el = document.getElementById("tab-logros");
+  var certs = [
+    {id:"exam1",icon:"🥉",title:"The Kitchen Speaks — Completado",desc:"Completaste el Bloque 1: vocabulario de cocina, listening basico, grammar y service phrases. Base solida construida.",block:"Meses 1-2"},
+    {id:"exam2",icon:"🥈",title:"Pro Kitchen English — Completado",desc:"Dominaste el Bloque 2: brigade system, voz pasiva, manejo de clientes e idioms profesionales.",block:"Meses 3-4"},
+    {id:"exam3",icon:"🏆",title:"LUMA Graduate",desc:"¡Completaste LUMA English! Has alcanzado nivel B2 con enfoque en listening y cocina profesional. ¡Increible trabajo, Andres!",block:"Meses 5-6"}
+  ];
+  var html = '<div class="page-title mb12">Logros 🏅</div>';
+  html += '<div class="body-text mb12">Completa cada bloque y su examen para desbloquear los certificados de progreso.</div>';
+  for (var i = 0; i < certs.length; i++) {
+    var c = certs[i];
+    var earned = S.progress[c.id] && S.progress[c.id].done;
+    var score = earned ? S.progress[c.id].score : null;
+    var date = earned ? S.progress[c.id].date : null;
+    html += '<div class="cert' + (earned ? " open" : "") + '">';
+    html += '<span class="cert-ico">' + c.icon + '</span>';
+    html += '<div class="cert-title">' + c.title + '</div>';
+    html += '<div class="cert-desc">' + c.desc + '</div>';
+    if (earned) html += '<div class="cert-date">✅ Completado el ' + date + ' · ' + score + '%</div>';
+    else html += '<div class="cert-locked">🔒 Completa el bloque (' + c.block + ') y su examen para desbloquear</div>';
+    html += '</div>';
+  }
+  html += '<div class="card card-g center"><div style="font-size:32px;margin-bottom:8px">🌟</div>';
+  html += '<div class="section-title" style="margin-bottom:4px">Tu racha actual</div>';
+  html += '<div style="font-family:\'Fraunces\',serif;font-size:32px;font-weight:700;color:var(--purple);margin-bottom:4px">' + S.streak + ' día' + (S.streak !== 1 ? 's' : '') + '</div>';
+  html += '<div class="body-text">La constancia es la clave del aprendizaje. ¡Sigue así!</div></div>';
+  el.innerHTML = html;
+}
+
+// ─── INIT ─────────────────────────────────────────────────
+loadState();
+renderInicio();
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function() {
+    navigator.serviceWorker.register("./sw.js");
+  });
+}
+</script>
+</body>
+</html>
